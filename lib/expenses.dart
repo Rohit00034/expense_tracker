@@ -28,6 +28,15 @@ class _ExpensesState extends State<Expenses> {
   @override
   Widget build(context) {
     return Scaffold(
+      appBar: AppBar( //by adding the appbar flutter makes sure that all the widgets fit properly on screen and also adds blank space not occupying the camera and device input(shutter) section
+        title: Text('Flutter ExpenseTracker'),
+        actions: [ //this is mainly used for adding buttons to the appBar at the top
+            IconButton( //this is type of button which only includes an icon not text and icon both as back when we used .icon() constructor over other buttons
+              onPressed: () {}, 
+              icon: const Icon(Icons.add),
+              )
+        ],
+        ),
       body: Column(
         children: 
         [

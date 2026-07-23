@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/expenses.dart';
 void main(){
   runApp(
-    const MaterialApp(
+     MaterialApp(
+      theme: ThemeData(useMaterial3: true), //added to use material3 no idea right now of what it is but it is for themeing
       home: Expenses()),
       );
 }
