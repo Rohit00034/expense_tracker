@@ -1,5 +1,6 @@
 import 'package:expense_tracker/widgets/expenses_list/expenses_list.dart';
 import 'package:expense_tracker/models/expense.dart';
+import 'package:expense_tracker/widgets/new_expense.dart';
 import 'package:flutter/material.dart';
 
 class Expenses extends StatefulWidget {
@@ -14,17 +15,22 @@ class _ExpensesState extends State<Expenses> {
   final List<Expense> _registeredExpenses = [ //we cannot keep a list const as it is going to be modified in memory even if it is final as we will be adding expenses in the list  
     Expense(
       title: 'Flutter Course',
-      amount: 19.99,
+      amount: 999.00,
       date: DateTime.now(), //the DateTime constructor is used here to pass an object to the main Expense() constructor .now() gives current date and time
       category: Category.work,
     ),
     Expense(
       title: 'Cinema',
-      amount: 12.69,
+      amount: 350.00,
       date: DateTime.now(),
       category: Category.leisure,
     ),
   ];
+
+void _openAddExpenseOverlay(){//modal bottomsheet widget is a overlay which opens from bottom like a widget opening from bottom over the screen
+  showModalBottomSheet(context: context, builder: (ctx)=>const NewExpense()); //context-context for the expenses widget and ctx-is context for showModalBottomSheet() widget ,thats why the names are different.hover over the builder parameter to see what it wants .the context here is a property given by flutter ,and every widget has a context property already given by flutter bts,the context property is like a metadata of the widget and also shows the location of widget in the widget tree 
+}
+
   @override
   Widget build(context) {
     return Scaffold(
@@ -32,7 +38,7 @@ class _ExpensesState extends State<Expenses> {
         title: Text('Flutter ExpenseTracker'),
         actions: [ //this is mainly used for adding buttons to the appBar at the top
             IconButton( //this is type of button which only includes an icon not text and icon both as back when we used .icon() constructor over other buttons
-              onPressed: () {}, 
+              onPressed: _openAddExpenseOverlay, 
               icon: const Icon(Icons.add),
               )
         ],
