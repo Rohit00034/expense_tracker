@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:expense_tracker/models/expense.dart'; //to import the formatter object we created from intl package
 
 class NewExpense extends StatefulWidget{
   const NewExpense({super.key});
@@ -15,6 +16,21 @@ class _NewExpenseState extends State<NewExpense>{
   final _titleController=TextEditingController(); //this is a class to optimize user input
 //when using this Controller() we need to destroy it from memory or else it just occupies the space in memory  
   final _amountController=TextEditingController();
+  DateTime? _selectedDate;
+  void _displayDatePicker() async {
+    final now=DateTime.now(); //this gives current date and time
+    final firstDate=DateTime(now.year-1,now.month,now.day); 
+    final pickedDate=await showDatePicker(  //built-in function by flutter to display date //the await keyword tells flutter to wait for pickedDate will receive a value in future and then execute the code after it
+      context: context, 
+      initialDate: now,  //the current date which will be displayed when picker is opened
+      firstDate: firstDate, //the oldest date we can choose  like lower limit
+      lastDate: now //the newest date we can use like upper limit,
+      );/*.then((value){});//showDatePicker() function returns the value but wrapped in a Future object used when there is going to be a value that is not yet here,so the future object is immediately returned even if the value is not picked up yet but flutter knows that some value will be selected ,when this receievs a value we can use the then() function ,once the date is picked here the function inside then() is executed another approach to this is the async await*/ 
+      //from this line , code will only be executed once the value is available
+      setState(() {
+        _selectedDate=pickedDate;
+      });
+  }
   @override
   void dispose() { //this function is just like build and initState given by StateFulWidget .it is called auto by flutter when the widget/it's state are about to be destroyed(removed from the ui)
     _titleController.dispose(); //deleting the TextEditingController class object from memory ,only state class can implement this method not Stateless
@@ -35,13 +51,35 @@ class _NewExpenseState extends State<NewExpense>{
               label: Text('Title')
             ),  
           ),
-          TextField(
-            keyboardType: TextInputType.number,
-            controller: _amountController,
-            decoration: InputDecoration(
-              prefixText:'\₹ ' ,  //text before the input field
-              label: Text('Amount')
-              ),
+          Row(
+            children: [
+          Expanded(//wrapped with Expanded as TextField takes as much as space possible horizontally so it is a problem combination in flutter with Row() as row allows to take much space horizontally too
+            child: TextField(
+              keyboardType: TextInputType.number,
+              controller: _amountController,
+              decoration: InputDecoration(
+                prefixText:'\₹ ' ,  //text before the input field
+                label: Text('Amount')
+                ),
+            ),
+          ),
+          const SizedBox(width: 16,),
+          Expanded(
+            child:Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(_selectedDate==null? 'No Selected Date': formatter.format(_selectedDate!/* ! forces dart that this variable won't be null  */)),
+                IconButton(
+                  onPressed: _displayDatePicker, 
+                  icon: const Icon(
+                    Icons.calendar_month),
+                    ),
+              ],
+            )
+            ),
+
+            ],
           ),
           Row(
             children: [
