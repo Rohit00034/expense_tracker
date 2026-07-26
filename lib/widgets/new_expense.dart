@@ -17,6 +17,7 @@ class _NewExpenseState extends State<NewExpense>{
 //when using this Controller() we need to destroy it from memory or else it just occupies the space in memory  
   final _amountController=TextEditingController();
   DateTime? _selectedDate;
+  var _selectedCategory= Category.leisure;
   void _displayDatePicker() async {
     final now=DateTime.now(); //this gives current date and time
     final firstDate=DateTime(now.year-1,now.month,now.day); 
@@ -30,6 +31,13 @@ class _NewExpenseState extends State<NewExpense>{
       setState(() {
         _selectedDate=pickedDate;
       });
+  }
+  void _saveExpenseData(){
+    final enteredAmount=double.tryParse(_amountController.text); //the dounble.tryParse tries to convert the value to a double eg double.tryparse('hello')=>null ,double.tryparse('3.12')=>3.12 
+    final amountIsInvalid= enteredAmount==null || enteredAmount<=0;
+    if(_titleController.text.trim().isEmpty || amountIsInvalid ||_selectedDate==null){
+      //show error meassage
+    } 
   }
   @override
   void dispose() { //this function is just like build and initState given by StateFulWidget .it is called auto by flutter when the widget/it's state are about to be destroyed(removed from the ui)
@@ -81,15 +89,31 @@ class _NewExpenseState extends State<NewExpense>{
 
             ],
           ),
+          SizedBox(height: 16,),
           Row(
             children: [
+              DropdownButton(
+                value: _selectedCategory, //this is the value which will be shown in dropdown
+                items: Category.values.map(
+                  (category)=>DropdownMenuItem(
+                    value: category, //this is what gets actually selected in code as a value,this value gets passed to the onchanged function
+                    child: Text(category.name.toUpperCase()))).toList(), //this is what the user sees 
+                onChanged: (value) {
+                  if(value==null){
+                    return;
+                  }
+                  setState(() {
+                    _selectedCategory=value;
+                  });
+                }), //Categroy.values converts this enum category to list of values of Category and on this list we use map() ,this map converts the enum list into a Iterable of Dropdownmenuitem then this iterable is converted to List by tolist() thus giving the DropDownButton a List<DropDownMenuItem<Object/Widget here>>
+              const Spacer(),
               TextButton(
                 onPressed: (){
                   Navigator.pop(context); //this closes the overlay and uses the context given to the build()
                 }, 
                 child: Text('Cancel')),
               ElevatedButton(
-                onPressed: (){print(_titleController.text);print(_amountController.text);}, 
+                onPressed: _saveExpenseData, 
                 child: Text('Save Expense')),
             ],
           )
