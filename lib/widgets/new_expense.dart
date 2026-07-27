@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:expense_tracker/models/expense.dart'; //to import the formatter object we created from intl package
 
 class NewExpense extends StatefulWidget{
-  const NewExpense({super.key});
+  const NewExpense({super.key,required this.addExpenseToList});
+  final void Function(Expense Object) addExpenseToList;
   @override
   State<NewExpense> createState(){
       return _NewExpenseState();
@@ -36,8 +37,21 @@ class _NewExpenseState extends State<NewExpense>{
     final enteredAmount=double.tryParse(_amountController.text); //the dounble.tryParse tries to convert the value to a double eg double.tryparse('hello')=>null ,double.tryparse('3.12')=>3.12 
     final amountIsInvalid= enteredAmount==null || enteredAmount<=0;
     if(_titleController.text.trim().isEmpty || amountIsInvalid ||_selectedDate==null){
-      //show error meassage
-    } 
+      showDialog( //used to show a dialog message
+        context: context, 
+        builder: (ctx)=>AlertDialog( //widget used to show alerdialog ,there are other options in widgets too rather than this one 
+          title: Text('Invalid Input'),
+          content: Text('Please make sure a valid title ,amount ,date and category was entered.'),
+          actions: [
+            TextButton(
+              onPressed: (){Navigator.pop(ctx);}, 
+              child: Text('Okay'))
+          ],
+        ));
+    return;
+    }
+    widget.addExpenseToList(Expense(title: _titleController.text, amount: enteredAmount, date: _selectedDate!, category: _selectedCategory));
+    Navigator.pop(context);   
   }
   @override
   void dispose() { //this function is just like build and initState given by StateFulWidget .it is called auto by flutter when the widget/it's state are about to be destroyed(removed from the ui)
@@ -48,7 +62,7 @@ class _NewExpenseState extends State<NewExpense>{
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.fromLTRB(16,48,16,16), //this adds padding to left,top,right,bottom respectively
       child: Column(children:  [
       TextField( //text input field widget
     // onChanged: _saveTitleInput, //onChanged calls a function given to it when any change in the textfield        
