@@ -33,9 +33,26 @@ _registeredExpenses.add(expense);
 });
 }
 void _removeRegisteredExpense(Expense expense){
+  final expenseIndex= _registeredExpenses.indexOf(expense);
   setState(() {
   _registeredExpenses.remove(expense);
     });
+    ScaffoldMessenger.of(context).clearSnackBars(); //if we remove expense one after the other we see that the snackbar for the first expense remains for 3 seconds as the duration set and after that the snackbar for the second one appears and we dont want that so we are using this to clear all the previous snackbars instantly
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 3),//used to set time duration for till how much time will be the snackbar be visible/show before disappearing ,make sure to add persist:false with this
+        persist: false,//used to make the snackbar remain as is not disappearing after a short duration   
+        content: Text('Expense Deleted.'), //used to set the content that will be displayed in the snackbar 
+        action: SnackBarAction(  //this is the undo button/action that will be performed after pressing the actionbutton
+          label: 'Undo', 
+          onPressed: (){
+            setState(() {
+              _registeredExpenses.insert(expenseIndex, expense); //the insert method inserts the expense in the correct position as before to ensure the expense comes back at the position it was in list as well as the display
+            });
+          }),
+
+          ),
+        ); //the ScaffoldeMessenger.of(context) gives us an object and the showSnackbar() is used here to show a small bar on the bottom of the screen for some time to undo etc.
 }
 void _openAddExpenseOverlay(){//modal bottomsheet widget is a overlay which opens from bottom like a widget opening from bottom over the screen
   showModalBottomSheet(
@@ -47,6 +64,10 @@ void _openAddExpenseOverlay(){//modal bottomsheet widget is a overlay which open
 
   @override
   Widget build(context) {
+    Widget maincontent=Center(child: const Text('No Expenses found.Start by adding some!'));
+    if(_registeredExpenses.isNotEmpty){
+      maincontent=ExpensesList(expenses: _registeredExpenses,onremoveExpense: _removeRegisteredExpense,);
+    }
     return Scaffold(
       appBar: AppBar( //by adding the appbar flutter makes sure that all the widgets fit properly on screen and also adds blank space not occupying the camera and device input(shutter) section
         title: Text('Flutter ExpenseTracker'),
@@ -61,7 +82,7 @@ void _openAddExpenseOverlay(){//modal bottomsheet widget is a overlay which open
         children: 
         [
         const Text('The chart'), 
-        Expanded(child: ExpensesList(expenses: _registeredExpenses,onremoveExpense: _removeRegisteredExpense,))],//we wrapped ExpensesList with expanded() because THE Expenses() widget displays a column and the ExpensesList is also diplaying a list which is a column so when we build the app we do not see any ExpensesList before wrapping it with expanded .that is because there is a column inside a column and with flutter we run into such problem with such combination.     
+        Expanded(child: maincontent)],//we wrapped ExpensesList with expanded() because THE Expenses() widget displays a column and the ExpensesList is also diplaying a list which is a column so when we build the app we do not see any ExpensesList before wrapping it with expanded .that is because there is a column inside a column and with flutter we run into such problem with such combination.     
       ),
     );
   }
