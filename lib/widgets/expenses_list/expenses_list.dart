@@ -18,6 +18,10 @@ class ExpensesList extends StatelessWidget{
     return ListView.builder(
       itemCount: expenses.length,
       itemBuilder: (context,index)=> Dismissible( //this dismissible widget can make its child widget diappear/dismissed by swiping from left to right or right to left
+        background: Container(
+          color: Theme.of(context).colorScheme.error.withValues(alpha: 0.75), //we can also change the inherited values from the theme
+          margin: EdgeInsets.symmetric(
+            horizontal:Theme.of(context).cardTheme.margin!.horizontal),), //This is the background which is painted behind the child widget when we swipe the widget in this case we are using data from the theme in our main.dart here.we have added the ! here because flutter doubts that the margin may not have been setup that is may be null to access the horizontal property of it 
         key: ValueKey(expenses[index]), //we will learn more about keys later but here key is something that helps flutter to uniquely identify a widget ,it is also needed to remove the data associated to the uniquely identifiable widget
         onDismissed: (direction){   //this needs a function of type which accepts DismissDirection as an input which is from left to right or right to left  
           onremoveExpense(expenses[index]);

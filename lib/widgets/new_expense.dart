@@ -91,8 +91,9 @@ class _NewExpenseState extends State<NewExpense>{
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(_selectedDate==null? 'No Selected Date': formatter.format(_selectedDate!/* ! forces dart that this variable won't be null  */)),
+                Text(_selectedDate==null? 'No Selected Date': formatter.format(_selectedDate!/* ! forces dart that this variable won't be null  */),style: TextStyle(color:  const Color.fromARGB(255, 220, 218, 218)),),
                 IconButton(
+                  color: Colors.white,
                   onPressed: _displayDatePicker, 
                   icon: const Icon(
                     Icons.calendar_month),
@@ -107,11 +108,12 @@ class _NewExpenseState extends State<NewExpense>{
           Row(
             children: [
               DropdownButton(
+                dropdownColor: Colors.grey,
                 value: _selectedCategory, //this is the value which will be shown in dropdown
                 items: Category.values.map(
                   (category)=>DropdownMenuItem(
                     value: category, //this is what gets actually selected in code as a value,this value gets passed to the onchanged function
-                    child: Text(category.name.toUpperCase()))).toList(), //this is what the user sees 
+                    child: Text(category.name.toUpperCase(),style: TextStyle(color: const Color.fromARGB(255, 232, 230, 230)),))).toList(), //this is what the user sees 
                 onChanged: (value) {
                   if(value==null){
                     return;
@@ -126,6 +128,7 @@ class _NewExpenseState extends State<NewExpense>{
                   Navigator.pop(context); //this closes the overlay and uses the context given to the build()
                 }, 
                 child: Text('Cancel')),
+                SizedBox(width: 6,),
               ElevatedButton(
                 onPressed: _saveExpenseData, 
                 child: Text('Save Expense')),

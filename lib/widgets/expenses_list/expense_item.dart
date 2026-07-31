@@ -9,11 +9,13 @@ class ExpenseItem extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-        child: Column(children: [
-          Text(expense.title),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start ,
+          children: [
+          Text(expense.title,style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 16,color: Colors.black)), //here we can also use style:Theme.of(context).textTheme.titleLarge to get the theme we defined in the main.dart for the theming ,i.e we can use the theme data inside our widgets too and change it too
           const SizedBox(height: 6,),
            Row(children: [
-            Text('\₹${expense.amount.toStringAsFixed(2)}'), //the \$ is an escape character used to include special characters in string and the ${} is the string injection as we have seen earlier.this toStringAsFixed(2) cuts the last two digits out and converts the given double to a string eg:- 12.3345->12.33 
+            Text('\₹${expense.amount.toStringAsFixed(2)}',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500) ,), //the \$ is an escape character used to include special characters in string and the ${} is the string injection as we have seen earlier.this toStringAsFixed(2) cuts the last two digits out and converts the given double to a string eg:- 12.3345->12.33 
             const Spacer(), //this Spacer() widget takes all the remaining available space in the main axis of parent and pushes the widgets surrounding it towards the edges of the parent widget,but it does not forcefully squash them ,it allows the surronding widegts to take as much space as they want and then occupies the rest.
             Row(children: [
               Icon(categoryIcons[expense.category]),
