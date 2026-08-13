@@ -14,18 +14,18 @@ class Expenses extends StatefulWidget {
 
 class _ExpensesState extends State<Expenses> {
   final List<Expense> _registeredExpenses = [ //we cannot keep a list const as it is going to be modified in memory even if it is final as we will be adding expenses in the list  
-    // Expense(
-    //   title: 'Flutter Course',
-    //   amount: 999.00,
-    //   date: DateTime.now(), //the DateTime constructor is used here to pass an object to the main Expense() constructor .now() gives current date and time
-    //   category: Category.work,
-    // ),
-    // Expense(
-    //   title: 'Cinema',
-    //   amount: 350.00,
-    //   date: DateTime.now(),
-    //   category: Category.leisure,
-    // ),
+    Expense(
+      title: 'Flutter Course',
+      amount: 999.00,
+      date: DateTime.now(), //the DateTime constructor is used here to pass an object to the main Expense() constructor .now() gives current date and time
+      category: Category.work,
+    ),
+    Expense(
+      title: 'Cinema',
+      amount: 350.00,
+      date: DateTime.now(),
+      category: Category.leisure,
+    ),
   ];
 
 void _addRegisteredExpense(Expense expense){
@@ -64,7 +64,8 @@ void _openAddExpenseOverlay(){//modal bottomsheet widget is a overlay which open
 }
 
   @override
-  Widget build(context) {
+  Widget build(context) { //the build method is execusted again if the device is rotated and the screen orientationis changed again
+    final width=MediaQuery.of(context).size.width; //here as we know mediaquery is used to get info about the current environment along with the context which provides metadata about the current widget it is in(e.g position in the widget tree) .this line gives us the width of the current screen 
     Widget maincontent=Center(child: const Text('No Expenses found.Start by adding some!'));
     if(_registeredExpenses.isNotEmpty){
       maincontent=ExpensesList(expenses: _registeredExpenses,onremoveExpense: _removeRegisteredExpense,);
@@ -79,12 +80,16 @@ void _openAddExpenseOverlay(){//modal bottomsheet widget is a overlay which open
               )
         ],
         ),
-      body: Column(
+      body: width<600? Column( //this condition helps us to understand if the device is in portrait or landscape mode
         children: 
         [
         Chart(expenses: _registeredExpenses), 
         Expanded(child: maincontent)],//we wrapped ExpensesList with expanded() because THE Expenses() widget displays a column and the ExpensesList is also diplaying a list which is a column so when we build the app we do not see any ExpensesList before wrapping it with expanded .that is because there is a column inside a column and with flutter we run into such problem with such combination.     
-      ),
+      ) : Row(
+        children: [
+        Expanded(child:Chart(expenses: _registeredExpenses)), //the chart widget has a container with width as double.infinity which occupies as much as space it wants and the row widget allows taking infinite space horizontally thats why we wrapped it in Expanded. and in flutter devtools>flutter inspector>Click on any widget in widget tree>Flex Explorer we can see that which constraints are being applied with arrows by the parent widget to the child and which widgets are unconstrained ,also the Scaffold widgets imposes height and width constaraints as max device height and max device width 
+        Expanded(child: maincontent),
+      ],),
     );
   }
 }

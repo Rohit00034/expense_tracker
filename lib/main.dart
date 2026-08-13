@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:expense_tracker/expenses.dart';
-
+// import 'package:flutter/services.dart'; //contains the SystemChrome class
 // var kColorScheme= ColorScheme.fromSeed(seedColor: Color(0xFFB0B0B0) );//the colorScheme could also be created from scratch but we can use the fromSeed() method here which allows the flutter to theme the app around a single color provided.the word k here is just a naming convention in flutter for global variables specially for themes
 var kColorScheme= const ColorScheme(brightness: Brightness.light, primary: Color(0xFF828282), onPrimary: Color(0xFFFFFFFF), secondary: Color(0xFF919191), onSecondary: Color(0xFFFFFFFF), error: Color(0xFFB00020), onError: Color(0xFFFFFFFF), surface: Color(0xFF4D4C4C), onSurface: Color(0xFFD1D1D1), primaryContainer: Color(0xFFB6B4B4), onPrimaryContainer: Color(0xFF4D4C4C), secondaryContainer: Color(0xFFD1D1D1), onSecondaryContainer: Color(0xFF4D4C4C));
 var kdarkColorScheme= ColorScheme.fromSeed(brightness: Brightness.dark/*shows that this is a dark mode color scheme */,seedColor: const Color.fromARGB(255, 150, 139, 128));
 void main() {
-  runApp(
+  // WidgetsFlutterBinding.ensureInitialized(); //this ensures that locking the orientation is done and then the app is run
+  // SystemChrome.setPreferredOrientations([ //this returns a future object
+  //   DeviceOrientation.portraitUp, //this code block ensures that we are locking the app orientation to portrait ,and it wont change if the device is on auto rotate and in landscape
+  // ]).then((fn){ //fn here is a function . the code inside this anonymous function is executed after the device orientation is locked
+runApp(
     MaterialApp(
       /*materialApp widget does alot of various work behind the scenes but this is also a central place to change the theme 
      of the app,meaning changing the colors the style all from one plcae rather than configuring each widget and copying pasting colors 
@@ -54,4 +58,6 @@ void main() {
       home: Expenses(),
     ),
   );
+  // });
+  
 }
